@@ -3,22 +3,35 @@
 Created on Fri Aug 22 13:19:32 2025
 
 @author: msmirnov
+
+Manual:
+1. Set up folder with uncropped images in line 20.
+2. Run the script.
+3. For each image:
+    - Click and drag red rectangle to desired position.
+    - Repeat the preveous item if necessary.
+    - Press 'Esc' to exit program.
+    - Press any other key to preview the cropped image.
+    - Press any key to save the cropped image
+      and proceed to the next photo.
 """
 
 import cv2
-import numpy as np
 import os
+import sys
 
 import tkinter as tk
-from glob import glob
 from tqdm import tqdm
 
-# img_fname = "Original.png"
-img_folder = 'GoPro'
+img_folder = 'GoPro'   #Set up image folder here !!!!!!!
 
-jpg_list = glob(os.path.join(img_folder, "*.jpg"))
+jpg_list = []
+for filename in os.listdir(img_folder):
+    if filename.lower().endswith((".jpg", ".jpeg")) and os.path.isfile(os.path.join(img_folder, filename)):
+        jpg_list.append(os.path.join(img_folder, filename))
+        
 Njpg = len(jpg_list)
-print(f'\n{Njpg} jpg images found in folder {img_folder}\n')
+print(f'\n{Njpg} jpg images found in folder {img_folder}\n')        
 
 # Check if the directory exists, and create it if it doesn't
 crop_folder = os.path.join(img_folder, 'Cropped')
@@ -74,18 +87,17 @@ for img_fname in tqdm(jpg_list):
     height1 = int(0.8 * screen_height)
     width1 = int(height1 * w0 /h0)
     cv2.resizeWindow('ROI selection', width1, height1)
-    # cv2.setWindowProperty('ROI selection', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     cv2.setMouseCallback('ROI selection', draw_shape_on_mouse)
     
     while True:
         cv2.imshow('ROI selection', img)
         key = cv2.waitKey(1) & 0xFF
-        #if key == 27: # Press 'Esc' to exit
-        if key != 255: # Press any key to exit       
-            break
-    
-    # cv2.destroyAllWindows()
-    
+        if key == 27: # Press 'Esc' to exit program
+            cv2.destroyAllWindows()
+            sys.exit('Stopped by user')
+        if key != 255: # Press any key to proceed to next photo       
+            break    
+       
     # Cropping image:
     x_start = 0
     x_end = w0
@@ -107,4 +119,4 @@ for img_fname in tqdm(jpg_list):
     img_fname_cropped = os.path.join(crop_folder, img_file)    
     cv2.imwrite(img_fname_cropped, cropped_image)
 
-print('Done!')
+print('All Photos Cropped!!!')
