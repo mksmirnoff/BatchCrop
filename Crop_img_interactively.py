@@ -21,9 +21,18 @@ import os
 import sys
 
 import tkinter as tk
-from tqdm import tqdm
+from tkinter import filedialog
 
-img_folder = 'GoPro'   #Set up image folder here !!!!!!!
+def select_folder():
+    """Opens a folder selection dialog and returns the selected path."""
+    root = tk.Tk()
+    root.withdraw()  # Hide the main Tkinter window
+    
+scriptDir = os.path.dirname(os.path.abspath(sys.argv[0]))    #Folder with this script
+
+img_folder = filedialog.askdirectory(
+    title="Select folder with photos",
+    initialdir=scriptDir )
 
 jpg_list = []
 for filename in os.listdir(img_folder):
@@ -47,9 +56,9 @@ screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 root.destroy() # Close the Tkinter root window
 
-for img_fname in tqdm(jpg_list):
+for nn, img_fname in enumerate(jpg_list):
     _, img_file = os.path.split(img_fname)
-    print(img_file)
+    #print(img_file)
     #img_fname = os.path.join(img_folder, img_file)
     
     # Global variables to store shape position and drawing state
@@ -118,5 +127,12 @@ for img_fname in tqdm(jpg_list):
     
     img_fname_cropped = os.path.join(crop_folder, img_file)    
     cv2.imwrite(img_fname_cropped, cropped_image)
+    print(f'Photo# {nn+1} of {Njpg} cropped')
 
 print('All Photos Cropped!!!')
+
+
+
+
+
+
