@@ -5,9 +5,9 @@ Created on Fri Aug 22 13:19:32 2025
 @author: msmirnov
 
 Manual:
-1. Set up folder with uncropped images in line 20.
-2. Run the script.
-3. For each image:
+1. Run the script.
+2. Select folder with photos
+3. For each photo:    
     - Click and drag red rectangle to desired position.
     - Repeat the preveous item if necessary.
     - Press 'Esc' to exit program.
